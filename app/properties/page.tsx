@@ -19,7 +19,7 @@ export default function Page() {
         const fetchProperties = async () => {
             setLoading(true);
             try {
-                // Apply filters here (initially show all, further refined below)
+               
                 let filtered = dummyProperties;
 
                
@@ -51,7 +51,7 @@ export default function Page() {
         <div className="text-black bg-white mx-auto px-4 md:px-8 py-8">
             <h1 className="text-3xl font-bold mb-6">Migra Aflux Properties</h1>
 
-            {/* Search Bar */}
+         
             <div className="relative mb-6">
                 <input
                     type="text"
@@ -64,7 +64,7 @@ export default function Page() {
             </div>
 
             <div className="flex flex-col md:flex-row gap-6">
-                {/* Filters - Sidebar */}
+           
                 <div className="md:w-1/4">
                     <PropertyFilters onFilterChange={setFilters} />
 
@@ -82,7 +82,7 @@ export default function Page() {
                     </div>
                 </div>
 
-                {/* Properties Grid */}
+             
                 <div className="md:w-3/4 md:h-screen md:overflow-y-auto">
                     {loading ? (
                         <div className="text-center py-10 text-gray-500">Loading properties...</div>
