@@ -63,8 +63,8 @@ export const Header = () => {
         <div className="md:hidden bg-white border-t">
           <div className="container mx-auto px-4 py-3">
             <div className="space-y-3">
-              <a href="#" className="block py-2 text-black hover:text-blue-600">Home</a>
-              <a href="#" className="block py-2 text-black hover:text-blue-600">Properties</a>
+              <a href="/" className="block py-2 text-black hover:text-blue-600">Home</a>
+              <a href="/properties" className="block py-2 text-black hover:text-blue-600">Properties</a>
               <a href="#" className="block py-2 text-black hover:text-blue-600">Marketplace</a>
               {/* <a href="#" className="block py-2 text-black hover:text-blue-600">About Us</a> */}
               <a href="#" className="block py-2 text-black hover:text-blue-600">Contact</a>
