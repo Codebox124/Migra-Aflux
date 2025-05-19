@@ -83,7 +83,7 @@ export default function Page() {
                 </div>
 
                 {/* Properties Grid */}
-                <div className="md:w-3/4 h-screen overflow-y-auto">
+                <div className="md:w-3/4 md:h-screen md:overflow-y-auto">
                     {loading ? (
                         <div className="text-center py-10 text-gray-500">Loading properties...</div>
                     ) : filteredProperties.length > 0 ? (
