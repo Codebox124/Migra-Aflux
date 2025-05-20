@@ -5,15 +5,15 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <main className="min-h-screen">
-    
+
       <section
         className="relative h-screen bg-cover bg-center text-white flex items-center"
         style={{ backgroundImage: "url('/hero.jpg')" }}
       >
-     
+
         <div className="absolute inset-0 bg-black opacity-60"></div>
 
-    
+
         <div className="container relative z-10 mx-auto px-4">
           <div className="max-w-3xl">
             <h1 className="text-5xl font-bold mb-4 leading-tight">
@@ -42,7 +42,7 @@ export default function Home() {
 
 
 
- 
+
       <section className="py-20 text-black bg-gray-50">
         <div className="container mx-auto  px-4">
           <h2 className="text-4xl font-bold mb-10 text-center">Featured Apartment</h2>
@@ -55,11 +55,21 @@ export default function Home() {
         </div>
       </section>
 
-      
+
       <section className="py-20 bg-white text-black">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold mb-10 text-center">Marketplace Categories</h2>
           <CategoryList />
+          <Link  href="/marketplace">
+            <div className='text-center mt-10'>
+              <span className="text-blue-600  inline-flex items-center group-hover:translate-x-1 transition-transform">
+                Browse Marketplace
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </div></Link>
         </div>
       </section>
 

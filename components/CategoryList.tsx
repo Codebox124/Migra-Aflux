@@ -92,13 +92,7 @@ export default function CategoryList() {
             <div className="p-4">
               <h3 className="text-xl font-semibold mb-1">{category.name}</h3>
               <p className="text-gray-600 mb-3">{category.description}</p>
-              <span className="text-blue-600 inline-flex items-center group-hover:translate-x-1 transition-transform">
-                Browse {category.name}
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </span>
+              
             </div>
           </div>
         </Link>

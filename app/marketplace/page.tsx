@@ -10,6 +10,7 @@ export default function MarketplacePage() {
   const [search, setSearch] = useState('');
   const [showCategories, setShowCategories] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setItems(dummyMarketplaceItems);
@@ -23,16 +24,22 @@ export default function MarketplacePage() {
     item.category.toLowerCase().includes(search.toLowerCase())
   );
 
- 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
         setShowCategories(false);
       }
     }
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleCategoryClick = (category: string) => {
+    setSearch(category);
+    setShowCategories(false);
+    resultRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <div className="bg-white px-4 md:px-10 py-10 min-h-screen text-black">
@@ -55,10 +62,7 @@ export default function MarketplacePage() {
             {allCategories.map((category, idx) => (
               <div
                 key={idx}
-                onClick={() => {
-                  setSearch(category);
-                  setShowCategories(false);
-                }}
+                onClick={() => handleCategoryClick(category)}
                 className="px-4 py-2 cursor-pointer hover:bg-blue-50 text-sm"
               >
                 {category}
@@ -68,7 +72,7 @@ export default function MarketplacePage() {
         )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div ref={resultRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredItems.map(item => (
           <MarketplaceCard key={item.id} item={item} />
         ))}
