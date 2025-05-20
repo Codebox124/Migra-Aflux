@@ -49,7 +49,7 @@ export default function Page() {
 
     return (
         <div className="text-black bg-white mx-auto px-4 md:px-8 py-8">
-            <h1 className="text-3xl font-bold mb-6">Migra Aflux Properties</h1>
+          
 
          
             <div className="relative mb-6">
