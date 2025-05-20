@@ -1,6 +1,6 @@
 'use client'
 import { useState } from "react";
-import { Search, Heart, Bell, User, Menu, X, Home, ShoppingBag, MessageSquare, HelpCircle, LogIn, ChevronDown, Facebook, Twitter, Instagram, Linkedin, Mail } from "lucide-react";
+import { Search, Heart, Bell, User, Menu, X, Home,  } from "lucide-react";
 
 
 export const Header = () => {
@@ -26,14 +26,12 @@ export const Header = () => {
 
 
 
-                        <a href="#" className="font-medium text-black hover:text-blue-600">Contact</a>
+                        
                     </nav>
 
 
                     <div className="flex items-center space-x-4">
-                        <button className="hidden md:flex items-center justify-center h-10 w-10 rounded-full hover:b-blacktext-black">
-                            <Search size={20} className="text-black" />
-                        </button>
+                      
 
 
                         <button className="flex items-center justify-center h-10 w-10 rounded-full hover:b-blacktext-black">
@@ -57,15 +55,9 @@ export const Header = () => {
                             <a href="/" className="block py-2 text-black hover:text-blue-600">Home</a>
                             <a href="/properties" className="block py-2 text-black hover:text-blue-600">Properties</a>
                             <a href="#" className="block py-2 text-black hover:text-blue-600">Marketplace</a>
-                            {/* <a href="#" className="block py-2 text-black hover:text-blue-600">About Us</a> */}
-                            <a href="#" className="block py-2 text-black hover:text-blue-600">Contact</a>
-                            <div className="flex space-x-4 py-2">
-                                <button className="flex items-center justify-center h-10 w-10 rounded-full hover:b-blacktext-black">
-                                    <Search size={20} className="text-black" />
-                                </button>
-
-
-                            </div>
+                         
+                         
+                          
                         </div>
                     </div>
                 </div>
