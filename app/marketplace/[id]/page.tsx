@@ -77,7 +77,7 @@ export default function MarketplaceDetailPage() {
                   src={item.image || '/hero.jpg'}
                   alt={item.title}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   priority
                 />
                 
@@ -150,7 +150,7 @@ export default function MarketplaceDetailPage() {
         {relatedItems.length > 0 && (
           <div className="mt-12">
             <h2 className="text-2xl font-bold mb-6">Related Items</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 md:gap-6 gap-3">
               {relatedItems.map((relatedItem) => (
                 <div key={relatedItem.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                   <Link href={`/marketplace/${relatedItem.id}`}>
@@ -159,7 +159,7 @@ export default function MarketplaceDetailPage() {
                         src={relatedItem.image || '/hero.jpg'}
                         alt={relatedItem.title}
                         fill
-                        className="object-cover"
+                        className="object-contain"
                       />
                     </div>
                     <div className="p-4">
