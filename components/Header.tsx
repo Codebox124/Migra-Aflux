@@ -54,7 +54,7 @@ export const Header = () => {
                         <div className="space-y-3">
                             <a href="/" className="block py-2 text-black hover:text-blue-600">Home</a>
                             <a href="/properties" className="block py-2 text-black hover:text-blue-600">Properties</a>
-                            <a href="#" className="block py-2 text-black hover:text-blue-600">Marketplace</a>
+                            <a href="/marketplace" className="block py-2 text-black hover:text-blue-600">Marketplace</a>
                          
                          
                           
