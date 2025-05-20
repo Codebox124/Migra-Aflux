@@ -8,36 +8,28 @@ import MarketplaceCard from '@/components/MarketPlaceCard';
 export default function MarketplacePage() {
   const [items, setItems] = useState<MarketplaceItem[]>([]);
   const [search, setSearch] = useState('');
-  const [showCategories, setShowCategories] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const resultRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setItems(dummyMarketplaceItems);
   }, []);
 
-  const allCategories = Array.from(new Set(dummyMarketplaceItems.map(item => item.category)));
+  const allCategories = ['All', ...Array.from(new Set(dummyMarketplaceItems.map(item => item.category)))];
 
-  const filteredItems = items.filter(item =>
-    item.title.toLowerCase().includes(search.toLowerCase()) ||
-    item.location.toLowerCase().includes(search.toLowerCase()) ||
-    item.category.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredItems = items.filter(item => {
+    const matchesSearch =
+      item.title.toLowerCase().includes(search.toLowerCase()) ||
+      item.location.toLowerCase().includes(search.toLowerCase()) ||
+      item.category.toLowerCase().includes(search.toLowerCase());
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
-        setShowCategories(false);
-      }
-    }
+    const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    return matchesSearch && matchesCategory;
+  });
 
   const handleCategoryClick = (category: string) => {
-    setSearch(category);
-    setShowCategories(false);
+    setSelectedCategory(category);
     resultRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -45,33 +37,37 @@ export default function MarketplacePage() {
     <div className="bg-white px-4 md:px-10 py-10 min-h-screen text-black">
       <h1 className="text-4xl font-bold mb-8 text-center">Migra Aflux Marketplace</h1>
 
-      <div className="relative max-w-2xl mx-auto mb-8">
+      {/* Search Bar */}
+      <div className="relative max-w-2xl mx-auto mb-6">
         <input
           type="text"
           placeholder="🔍 Search for products, categories, or location..."
           className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={search}
-          ref={inputRef}
-          onFocus={() => setShowCategories(true)}
           onChange={(e) => setSearch(e.target.value)}
         />
-
-        {/* Category Dropdown */}
-        {showCategories && (
-          <div className="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
-            {allCategories.map((category, idx) => (
-              <div
-                key={idx}
-                onClick={() => handleCategoryClick(category)}
-                className="px-4 py-2 cursor-pointer hover:bg-blue-50 text-sm"
-              >
-                {category}
-              </div>
-            ))}
-          </div>
-        )}
       </div>
 
+      {/* Category Tabs */}
+      <div className="overflow-x-auto mb-8">
+        <div className="flex space-x-6 px-2 min-w-max border-b">
+          {allCategories.map((category, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleCategoryClick(category)}
+              className={`pb-2 text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+                selectedCategory === category
+                  ? 'text-blue-600 border-b-2 border-blue-600'
+                  : 'text-gray-500 hover:text-blue-500'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Items */}
       <div ref={resultRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredItems.map(item => (
           <MarketplaceCard key={item.id} item={item} />
