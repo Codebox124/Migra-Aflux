@@ -67,7 +67,7 @@ export default function MarketplacePage() {
             </div>
 
             {/* Items */}
-            <div ref={resultRef} className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 md:gap-8 gap-3">
+            <div ref={resultRef} className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-8 gap-3">
                 {filteredItems.map(item => (
                     <MarketplaceCard key={item.id} item={item} />
                 ))}
