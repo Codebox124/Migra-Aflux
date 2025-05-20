@@ -5,16 +5,15 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <main className="min-h-screen">
-      {/* Hero Section */}
-      {/* Hero Section */}
+    
       <section
         className="relative h-screen bg-cover bg-center text-white flex items-center"
         style={{ backgroundImage: "url('/hero.jpg')" }}
       >
-        {/* Overlay */}
+     
         <div className="absolute inset-0 bg-black opacity-60"></div>
 
-        {/* Content */}
+    
         <div className="container relative z-10 mx-auto px-4">
           <div className="max-w-3xl">
             <h1 className="text-5xl font-bold mb-4 leading-tight">
@@ -46,7 +45,7 @@ export default function Home() {
  
       <section className="py-20 text-black bg-gray-50">
         <div className="container mx-auto  px-4">
-          <h2 className="text-4xl font-bold mb-10 text-center">Featured Listings</h2>
+          <h2 className="text-4xl font-bold mb-10 text-center">Featured Apartment</h2>
           <PropertyList featured={true} limit={3} />
           <div className="text-center mt-10">
             <Link href="/properties" className="text-blue-700 font-semibold hover:underline">
