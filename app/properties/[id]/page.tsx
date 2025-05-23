@@ -1,59 +1,184 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { dummyProperties } from '@/data/properties';
+import { useState, useEffect } from 'react';
 import PropertyStatusBadge from '@/components/PropertyStatusBadge';
 import Image from 'next/image';
+import { Property } from '@/utils/types/properties';
+
+// Loading component
+const LoadingSpinner = () => (
+    <div className="flex justify-center items-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    </div>
+);
+
+// Error component
+const ErrorMessage = ({ message }: { message: string }) => (
+    <div className="max-w-5xl mx-auto p-6">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <p className="font-medium">Error:</p>
+            <p>{message}</p>
+        </div>
+    </div>
+);
 
 export default function PropertyDetailsPage() {
     const { id } = useParams();
-    const property = dummyProperties.find((p) => p.id === id);
+    const [property, setProperty] = useState<Property | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    if (!property) {
-        return <div className="p-6">Property not found</div>;
+    useEffect(() => {
+        const fetchProperty = async () => {
+            if (!id) return;
+
+            try {
+                setLoading(true);
+                setError(null);
+
+                const response = await fetch(`https://migra.buyjet.ng/api/listings/${id}`);
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('Property not found');
+                    }
+                    throw new Error(`Failed to fetch property: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Raw API response:', data);
+                console.log('Data type:', typeof data);
+                console.log('Data keys:', Object.keys(data));
+
+                // Check if data is wrapped in another object
+                const propertyData = data.data || data.property || data;
+                console.log('Property data to use:', propertyData);
+
+                setProperty(propertyData);
+            } catch (err) {
+                console.error('Error fetching property:', err);
+                setError(err instanceof Error ? err.message : 'Failed to load property');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProperty();
+    }, [id]);
+
+    // Loading state
+    if (loading) {
+        return <LoadingSpinner />;
     }
 
-    const { title, image, location, description, videoUrl, price, priceUnit, status, beds, baths, area } = property;
+    // Error state
+    if (error) {
+        return <ErrorMessage message={error} />;
+    }
 
-    const formatPrice = () =>
-        priceUnit === 'month' ? `$${price.toLocaleString()}/month` : `$${price.toLocaleString()}`;
+    // Property not found
+    if (!property) {
+        return (
+            <div className="max-w-5xl mx-auto p-6">
+                <div className="text-center py-12">
+                    <h1 className="text-2xl font-bold text-gray-700 mb-4">Property Not Found</h1>
+                    <p className="text-gray-500">The requested property could not be found.</p>
+                </div>
+            </div>
+        );
+    }
+
+    const { name, image, address, description, video_url, amount, status, intervals } = property;
+
+    // Debug log the destructured values
+    console.log('Destructured values:', {
+        name,
+        image,
+        address,
+        description,
+        video_url,
+        amount,
+        status,
+        intervals
+    });
+
+    const formatPrice = () => {
+        if (!amount) return 'Price not available';
+        const formatted = parseFloat(amount.toString()).toLocaleString();
+        return intervals ? `₦${formatted}/${intervals}` : `₦${formatted}`;
+    };
+
+    const getImageSrc = () => {
+        if (!image) return '/hero.jpg';
+        return image.startsWith('http') ? image : `https://migra.buyjet.ng/${image}`;
+    };
+
+    const getEmbedUrl = (url: string) => {
+        // Handle youtube.com/watch?v= format
+        if (url.includes('youtube.com/watch?v=')) {
+            const videoId = url.split('watch?v=')[1].split('&')[0];
+            return `https://www.youtube.com/embed/${videoId}`;
+        }
+
+        // Handle youtu.be/ format
+        if (url.includes('youtu.be/')) {
+            const videoId = url.split('youtu.be/')[1].split('?')[0];
+            return `https://www.youtube.com/embed/${videoId}`;
+        }
+
+        // Handle m.youtube.com format
+        if (url.includes('m.youtube.com/watch?v=')) {
+            const videoId = url.split('watch?v=')[1].split('&')[0];
+            return `https://www.youtube.com/embed/${videoId}`;
+        }
+
+        // If it's already an embed URL, return as is
+        if (url.includes('youtube.com/embed/')) {
+            return url;
+        }
+
+        return url;
+    };
 
     return (
         <div className="max-w-5xl mx-auto p-6 space-y-6">
-            <h1 className="text-3xl font-bold">{title}</h1>
-            <PropertyStatusBadge status={status} />
+            <div className="flex items-start justify-between flex-wrap gap-4">
+                <h1 className="text-3xl font-bold">{name || 'Property Details'}</h1>
+                <PropertyStatusBadge status={status} />
+            </div>
 
-            <div className="relative w-full h-96 rounded overflow-hidden">
+            <div className="relative w-full h-96 rounded-lg overflow-hidden bg-gray-100">
                 <Image
-                    src={image || '/hero.jpg'}
-                    alt={title}
+                    src={getImageSrc()}
+                    alt={name || 'Property image'}
                     fill
                     className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                    priority
                 />
             </div>
 
-            <div className="text-xl font-semibold text-blue-600">{formatPrice()}</div>
-            <p className="text-gray-700">{location}</p>
-
-            <div className="flex space-x-4 text-sm text-gray-500">
-                <span>{beds} {beds === 1 ? 'Bed' : 'Beds'}</span>
-                <span>{baths} {baths === 1 ? 'Bath' : 'Baths'}</span>
-                <span>{area} sq ft</span>
+            <div className="flex items-center justify-between flex-wrap gap-4">
+                <div className="text-2xl font-bold text-blue-600">{formatPrice()}</div>
+                {address && <p className="text-gray-700 text-lg">{address}</p>}
             </div>
 
             {description && (
-                <div>
-                    <h2 className="text-xl font-semibold mt-6 mb-2">Description</h2>
-                    <p className="text-gray-600">{description}</p>
+                <div className="bg-gray-50 rounded-lg p-6">
+                    <h2 className="text-xl font-semibold mb-4">Description</h2>
+                    <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                        {description}
+                    </div>
                 </div>
             )}
 
-            {videoUrl && (
-                <div>
-                    <h2 className="text-xl font-semibold mt-6 mb-2">Video Tour</h2>
-                    <div className="aspect-video w-full rounded-lg overflow-hidden">
-                        <iframe
-                            src={videoUrl.replace('watch?v=', 'embed/')}
+            {video_url && (
+                <div className="bg-gray-50 rounded-lg p-6">
+                    <h2 className="text-xl font-semibold mb-4">Video Tour</h2>
+                    <div className="aspect-video w-full rounded-lg overflow-hidden bg-black">
+                       <iframe
+                            src={video_url.replace('watch?v=', 'embed/')}
                             title="Property Tour"
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -63,6 +188,21 @@ export default function PropertyDetailsPage() {
                     </div>
                 </div>
             )}
+            <div className="pt-6 border-t">
+                <button
+                    onClick={() => window.history.back()}
+                    className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md transition-colors"
+                >
+                    ← Back to Properties
+                </button>
+            </div>
+
+            {/* <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-6">
+                <h3 className="text-lg font-semibold mb-2">Debug Info (remove in production):</h3>
+                <pre className="text-sm bg-gray-100 p-3 rounded overflow-auto">
+                    {JSON.stringify(property, null, 2)}
+                </pre>
+            </div> */}
         </div>
     );
 }

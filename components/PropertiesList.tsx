@@ -13,9 +13,11 @@ export default function PropertyList({ featured = false, limit = 6 }) {
 
   useEffect(() => {
     const fetchProperties = async () => {
+      const response = await fetch('https://migra.buyjet.ng/api/listings');
       setLoading(true);
+      const data = await response.json();
       try {
-        let filtered = dummyProperties;
+        let filtered = data;
         if (featured) {
           filtered = filtered.filter(p => p.status === 'available');
         }
@@ -28,8 +30,29 @@ export default function PropertyList({ featured = false, limit = 6 }) {
       }
     };
 
+
     fetchProperties();
   }, [featured, limit]);
+
+  // useEffect(() => {
+  //   const fetchProperties = async () => {
+  //     setLoading(true);
+  //   try {
+  //     let filtered = dummyProperties;
+  //     if (featured) {
+  //       filtered = filtered.filter(p => p.status === 'available');
+  //     }
+
+  //     setProperties(filtered.slice(0, limit));
+  //   } catch (error) {
+  //     console.error('Error fetching properties:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  //   fetchProperties();
+  // }, [featured, limit]);
 
   if (loading) {
     return (

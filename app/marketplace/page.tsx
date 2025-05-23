@@ -10,17 +10,50 @@ export default function MarketplacePage() {
     const [search, setSearch] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const resultRef = useRef<HTMLDivElement>(null);
+    const [loading, setLoading] = useState(true);
+
 
     useEffect(() => {
-        setItems(dummyMarketplaceItems);
+        const fetchProperties = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch('https://migra.buyjet.ng/api/products');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Fetched data:', data);
+
+                const adaptedData: MarketplaceItem[] = Array.isArray(data?.data?.data)
+                    ? data.data.data.map((item: any) => ({
+                        id: item.id,
+                        name: item.name,
+                        city: item.city,
+                        amount: item.amount ?? '0',
+                        image: item.image,
+                        condition: item.condition,
+                    }))
+                    : [];
+
+                setItems(adaptedData);
+            } catch (error) {
+                console.error('Failed to fetch properties:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProperties();
     }, []);
 
-    const allCategories = ['All', ...Array.from(new Set(dummyMarketplaceItems.map(item => item.category)))];
+    const allCategories = ['All', ...Array.from(new Set(items.map(item => item.category)))];
 
     const filteredItems = items.filter(item => {
         const matchesSearch =
-            item.title.toLowerCase().includes(search.toLowerCase()) ||
-            item.location.toLowerCase().includes(search.toLowerCase()) ||
+            item.name.toLowerCase().includes(search.toLowerCase()) ||
+            item.city.toLowerCase().includes(search.toLowerCase()) ||
             item.category.toLowerCase().includes(search.toLowerCase());
 
         const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
@@ -56,8 +89,8 @@ export default function MarketplacePage() {
                             key={idx}
                             onClick={() => handleCategoryClick(category)}
                             className={`pb-2 text-sm font-medium whitespace-nowrap transition-all duration-200 ${selectedCategory === category
-                                    ? 'text-blue-600 border-b-2 border-blue-600'
-                                    : 'text-gray-500 hover:text-blue-500'
+                                ? 'text-blue-600 border-b-2 border-blue-600'
+                                : 'text-gray-500 hover:text-blue-500'
                                 }`}
                         >
                             {category}
@@ -68,8 +101,10 @@ export default function MarketplacePage() {
 
             {/* Items */}
             <div ref={resultRef} className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-8 gap-3">
-                {filteredItems.map(item => (
-                    <MarketplaceCard key={item.id} item={item} />
+
+
+                {filteredItems.map((product) => (
+                    <MarketplaceCard key={product.id} product={product} />
                 ))}
             </div>
 

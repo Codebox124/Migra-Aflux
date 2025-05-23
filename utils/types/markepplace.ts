@@ -1,13 +1,15 @@
-
 export type MarketplaceItem = {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  category: string;
-  condition: 'new' | 'used';
-  location: string;
+  id: number;
+  name: string;
   image: string;
-  sellerName: string;
-  status: 'available' | 'sold';
+  slug: string;
+  category: string;
+  description: string;
+  amount: string;
+  city: string;
+  condition: string;
+  seller: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
 };

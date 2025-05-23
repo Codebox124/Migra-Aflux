@@ -60,7 +60,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold mb-10 text-center">Marketplace Categories</h2>
           <CategoryList />
-          <Link  href="/marketplace">
+          <Link href="/marketplace">
             <div className='text-center mt-10'>
               <span className="text-blue-600  inline-flex items-center group-hover:translate-x-1 transition-transform">
                 Browse Marketplace

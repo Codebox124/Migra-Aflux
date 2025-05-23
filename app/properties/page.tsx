@@ -1,11 +1,11 @@
-'use client'
-import PropertyCard from '@/components/PropertiesCard'
-import PropertyFilters from '@/components/PropertiesFilter'
-import { dummyProperties } from '@/data/properties'
-import { Property } from '@/utils/types/properties'
-import { Search } from 'lucide-react'
-import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+'use client';
+
+import PropertyCard from '@/components/PropertiesCard';
+import PropertyFilters from '@/components/PropertiesFilter';
+import { Property } from '@/utils/types/properties';
+import { Search } from 'lucide-react';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 
 type PropertyStatus = 'available' | 'under-inspection' | 'unavailable';
 
@@ -19,14 +19,31 @@ export default function Page() {
         const fetchProperties = async () => {
             setLoading(true);
             try {
-               
-                let filtered = dummyProperties;
+                const response = await fetch('https://migra.buyjet.ng/api/listings');
 
-               
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
-                setProperties(filtered);
+                const data = await response.json();
+                console.log('Fetched data:', data);
+
+                const adaptedData: Property[] = Array.isArray(data?.data?.data)
+                    ? data.data.data.map((item: any) => ({
+                        id: item.id,
+                        name: item.name,
+                        address: item.address,
+                        amount: item.amount ?? '0',
+                        intervals: item.intervals,
+                        status: item.status,
+                        image: item.image,
+                        property_type: item.property_type,
+                    }))
+                    : [];
+
+                setProperties(adaptedData);
             } catch (error) {
-                console.error('Error fetching properties:', error);
+                console.error('Failed to fetch properties:', error);
             } finally {
                 setLoading(false);
             }
@@ -38,20 +55,17 @@ export default function Page() {
     const filteredProperties = properties.filter((property) => {
         const matchesSearch =
             searchQuery === '' ||
-            property.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            property.location.toLowerCase().includes(searchQuery.toLowerCase());
+            property.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            property.address.toLowerCase().includes(searchQuery.toLowerCase());
 
         const matchesStatus = !filters.status || property.status === filters.status;
-        const matchesType = !filters.type || property.type === filters.type;
+        const matchesType = !filters.type || property.property_type === filters.type;
 
         return matchesSearch && matchesStatus && matchesType;
     });
 
     return (
         <div className="text-black bg-white mx-auto px-4 md:px-8 py-8">
-          
-
-         
             <div className="relative mb-6">
                 <input
                     type="text"
@@ -64,7 +78,6 @@ export default function Page() {
             </div>
 
             <div className="flex flex-col md:flex-row gap-6">
-           
                 <div className="md:w-1/4">
                     <PropertyFilters onFilterChange={setFilters} />
 
@@ -82,14 +95,13 @@ export default function Page() {
                     </div>
                 </div>
 
-             
                 <div className="md:w-3/4 md:h-screen md:overflow-y-auto">
                     {loading ? (
                         <div className="text-center py-10 text-gray-500">Loading properties...</div>
                     ) : filteredProperties.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {filteredProperties.map((property) => (
-                                <PropertyCard key={property.id} property={property} />
+                              <PropertyCard key={property.id} property={property} />
                             ))}
                         </div>
                     ) : (
