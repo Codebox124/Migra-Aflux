@@ -19,7 +19,7 @@ export default function PropertyList({ featured = false, limit = 6 }) {
       try {
         let filtered = data;
         if (featured) {
-          filtered = filtered.filter(p => p.status === 'available');
+          filtered = filtered.filter((p: { status: string; }) => p.status === 'available');
         }
 
         setProperties(filtered.slice(0, limit));
