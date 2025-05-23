@@ -1,6 +1,7 @@
 'use client'
 import { useState } from "react";
-import { Search, Heart, Bell, User, Menu, X, Home,  } from "lucide-react";
+import { Search, Heart, Bell, User, Menu, X, Home, } from "lucide-react";
+import Link from "next/link";
 
 
 export const Header = () => {
@@ -26,16 +27,19 @@ export const Header = () => {
 
 
 
-                        
+
                     </nav>
 
 
                     <div className="flex items-center space-x-4">
-                      
+
 
 
                         <button className="flex items-center justify-center h-10 w-10 rounded-full hover:b-blacktext-black">
-                            <User size={20} className="text-black" />
+                           
+                            <Link href='https://migra.buyjet.ng/admin/login' >
+                                <User size={20} className="text-black" />
+                            </Link>
                         </button>
                         <button
                             className="md:hidden flex items-center justify-center h-10 w-10 rounded-full hover:b-blacktext-black"
@@ -55,9 +59,9 @@ export const Header = () => {
                             <a href="/" className="block py-2 text-black hover:text-blue-600">Home</a>
                             <a href="/properties" className="block py-2 text-black hover:text-blue-600">Properties</a>
                             <a href="/marketplace" className="block py-2 text-black hover:text-blue-600">Marketplace</a>
-                         
-                         
-                          
+
+
+
                         </div>
                     </div>
                 </div>
