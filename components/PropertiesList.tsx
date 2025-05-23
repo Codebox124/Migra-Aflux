@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import PropertyCard from './PropertiesCard';
-import { dummyProperties } from '@/data/properties';
+
 import { Property } from '@/utils/types/properties';
 
 interface PropertyListProps {
@@ -69,12 +69,8 @@ export default function PropertyList({ featured = false, limit = 6 }: PropertyLi
         console.log(`Found ${propertiesArray.length} properties from API`);
 
         if (propertiesArray.length === 0) {
-          console.log('No properties returned from API, using dummy data');
-          let filtered = dummyProperties;
-          if (featured) {
-            filtered = filtered.filter(p => p.status === 'available' && p.is_active);
-          }
-          setProperties(filtered.slice(0, limit));
+          console.log('No properties returned from API');
+          setProperties([]);
           return;
         }
 
@@ -132,13 +128,8 @@ export default function PropertyList({ featured = false, limit = 6 }: PropertyLi
           setError('Unknown error occurred while fetching properties');
         }
 
-        // Always fallback to dummy data on error
-        console.log('Using dummy data as fallback due to error');
-        let filtered = dummyProperties;
-        if (featured) {
-          filtered = filtered.filter(p => p.status === 'available' && p.is_active);
-        }
-        setProperties(filtered.slice(0, limit));
+        // Set empty array on error
+        setProperties([]);
       } finally {
         setLoading(false);
       }
@@ -172,12 +163,11 @@ export default function PropertyList({ featured = false, limit = 6 }: PropertyLi
     );
   }
 
-  // Don't show error message if we have fallback data
-  if (error && properties.length === 0) {
+  if (error) {
     return (
       <div className="text-center py-10">
-        <div className="text-orange-500 mb-2">⚠️ {error}</div>
-        <p className="text-gray-600">Please try again later</p>
+        <div className="text-red-500 mb-2">❌ {error}</div>
+        <p className="text-gray-600">Unable to load properties. Please try again later.</p>
         <button 
           onClick={() => window.location.reload()} 
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -202,15 +192,6 @@ export default function PropertyList({ featured = false, limit = 6 }: PropertyLi
 
   return (
     <div className="w-full">
-      {/* Show subtle warning if using fallback data */}
-      {error && properties.length > 0 && (
-        <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <p className="text-sm text-yellow-800">
-            ⚠️ Using cached data due to API issue. Some properties may not be up to date.
-          </p>
-        </div>
-      )}
-      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {properties.map(property => (
           <PropertyCard key={property.id} property={property} />

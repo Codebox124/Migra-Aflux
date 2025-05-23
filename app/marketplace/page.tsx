@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { dummyMarketplaceItems } from '@/data/marketplace';
+
 import { MarketplaceItem } from '@/utils/types/markepplace';
 import MarketplaceCard from '@/components/MarketPlaceCard';
 
@@ -46,9 +46,7 @@ export default function MarketplacePage() {
                 setItems(adaptedData);
             } catch (error) {
                 console.error('Failed to fetch properties:', error);
-                // Fallback to dummy data if API fails
-                console.log('Using dummy data as fallback');
-                setItems(dummyMarketplaceItems);
+               
             } finally {
                 setLoading(false);
             }
