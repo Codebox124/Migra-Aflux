@@ -90,6 +90,8 @@ export default function PropertyList({ featured = false, limit = 6 }: PropertyLi
             amount: String(item.amount || item.price || '0'),
             intervals: item.intervals || item.rental_period || '',
             tags: item.tags || null,
+            units_left : item.units_left ,
+            other_images : item.other_images,
             status: item.status || 'available',
             property_type: item.property_type || item.type || 'residential',
             is_active: item.is_active !== undefined ? Boolean(item.is_active) : true,

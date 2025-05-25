@@ -36,6 +36,7 @@ export default function MarketplacePage() {
                         amount: item.amount ?? '0',
                         city: item.city,
                         condition: item.condition,
+                        other_images : item.other_images,
                         seller: item.seller,
                         is_active: item.is_active ?? true,
                         created_at: item.created_at,
@@ -87,7 +88,7 @@ export default function MarketplacePage() {
     }
 
     return (
-        <div className="bg-white px-4 md:px-10 py-10 min-h-screen text-black">
+        <div className="bg-white px-4  md:px-20 py-10 min-h-screen text-black">
             {/* Header */}
             <div className="text-center mb-8">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Marketplace</h1>

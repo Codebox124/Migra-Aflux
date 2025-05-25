@@ -17,6 +17,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     intervals,
     status,
     image,
+    units_left
   } = property;
 
 
@@ -54,13 +55,15 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           )}
         </div>
 
-        {/* Optional: If beds, baths, and area are added later, uncomment this
-        <div className="flex justify-between text-sm text-gray-500 border-t pt-3">
-          <span>{beds} {beds === 1 ? 'Bed' : 'Beds'}</span>
-          <span>{baths} {baths === 1 ? 'Bath' : 'Baths'}</span>
-          <span>{area} sq ft</span>
-        </div>
-        */}
+   
+        {typeof property.units_left === 'string' && (
+          <p className="text-sm text-gray-700 mb-2">
+            <span className="font-medium">Units left:</span> {property.units_left}
+          </p>
+        )}
+
+
+
 
         <Link
           href={`/properties/${id}`}

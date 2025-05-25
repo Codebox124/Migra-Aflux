@@ -89,7 +89,7 @@ export default function PropertyDetailsPage() {
         );
     }
 
-    const { name, image, address, description, video_url, amount, status, intervals } = property;
+    const { name, image, address, description, video_url, amount, status, intervals, other_images } = property;
 
     // Debug log the destructured values
     console.log('Destructured values:', {
@@ -114,35 +114,11 @@ export default function PropertyDetailsPage() {
         return image.startsWith('http') ? image : `https://migra.buyjet.ng/${image}`;
     };
 
-    const getEmbedUrl = (url: string) => {
-        // Handle youtube.com/watch?v= format
-        if (url.includes('youtube.com/watch?v=')) {
-            const videoId = url.split('watch?v=')[1].split('&')[0];
-            return `https://www.youtube.com/embed/${videoId}`;
-        }
-
-        // Handle youtu.be/ format
-        if (url.includes('youtu.be/')) {
-            const videoId = url.split('youtu.be/')[1].split('?')[0];
-            return `https://www.youtube.com/embed/${videoId}`;
-        }
-
-        // Handle m.youtube.com format
-        if (url.includes('m.youtube.com/watch?v=')) {
-            const videoId = url.split('watch?v=')[1].split('&')[0];
-            return `https://www.youtube.com/embed/${videoId}`;
-        }
-
-        // If it's already an embed URL, return as is
-        if (url.includes('youtube.com/embed/')) {
-            return url;
-        }
-
-        return url;
-    };
-
+    const additionalImages = other_images
+        ? other_images.split(',').map((img: string) => `https://migra.buyjet.ng/${img.trim()}`)
+        : [];
     return (
-        <div className="max-w-5xl mx-auto p-6 space-y-6">
+        <div className="max-w-7xl mx-auto p-6 space-y-6">
             <div className="flex items-start justify-between flex-wrap gap-4">
                 <h1 className="text-3xl font-bold">{name || 'Property Details'}</h1>
                 <PropertyStatusBadge status={status} />
@@ -172,12 +148,34 @@ export default function PropertyDetailsPage() {
                     </div>
                 </div>
             )}
+            {additionalImages.length > 0 && (
+                <div className="mt-6">
+                    <h2 className="text-xl font-semibold mb-4">More Images</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        {additionalImages.map((imgUrl, idx) => (
+                            <div
+                                key={idx}
+                                className="relative w-full h-72 sm:h-80 md:h-96 bg-gray-100 rounded-lg overflow-hidden"
+                            >
+                                <Image
+                                    src={imgUrl}
+                                    alt={`Additional property image ${idx + 1}`}
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+
 
             {video_url && (
                 <div className="bg-gray-50 rounded-lg p-6">
                     <h2 className="text-xl font-semibold mb-4">Video Tour</h2>
                     <div className="aspect-video w-full rounded-lg overflow-hidden bg-black">
-                       <iframe
+                        <iframe
                             src={video_url.replace('watch?v=', 'embed/')}
                             title="Property Tour"
                             frameBorder="0"

@@ -17,6 +17,7 @@ export default function MarketplaceDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+
   useEffect(() => {
     const fetchItemData = async () => {
       if (!itemId) return;
@@ -127,9 +128,17 @@ export default function MarketplaceDetailPage() {
     description,
     seller,
     is_active,
+    other_images,
     image,
     category,
   } = item;
+
+
+
+  const additionalImages = other_images
+    ? other_images.split(',').map((img: string) => `https://migra.buyjet.ng/${img.trim()}`)
+    : [];
+
 
   const getImageSrc = () => {
     if (!image) return '/hero.jpg';
@@ -233,6 +242,25 @@ export default function MarketplaceDetailPage() {
             </div>
           </div>
         </div>
+
+        {additionalImages.length > 0 && (
+          <div className="mt-6">
+            <h2 className="text-xl font-semibold mb-4">More Images</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {additionalImages.map((imgUrl, idx) => (
+                <div key={idx} className="relative w-full aspect-square bg-gray-100 rounded overflow-hidden">
+                  <Image
+                    src={imgUrl}
+                    alt={`Additional property image ${idx + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
 
         {/* Related Items */}
         {relatedItems.length > 0 && (

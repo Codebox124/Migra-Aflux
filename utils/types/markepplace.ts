@@ -9,6 +9,7 @@ export type MarketplaceItem = {
   city: string;
   condition: string;
   seller: string;
+  other_images : string;
   is_active: boolean;
   created_at: string;
   updated_at: string;

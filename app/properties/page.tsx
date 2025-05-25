@@ -65,7 +65,7 @@ export default function Page() {
     });
 
     return (
-        <div className="text-black bg-white mx-auto px-4 md:px-8 py-8">
+        <div className="text-black bg-white mx-auto px-4 md:px-20 py-8">
             <div className="relative mb-6">
                 <input
                     type="text"

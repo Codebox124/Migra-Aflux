@@ -12,8 +12,10 @@ export interface Property {
   intervals: string;
   tags: string | null;
   status: string;
+  units_left: string;
   property_type: string;
   is_active: boolean;
+  other_images : string;
   created_at: string;
   updated_at: string;
 }
