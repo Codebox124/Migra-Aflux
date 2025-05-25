@@ -8,7 +8,6 @@ interface ProductCardProps {
 }
 
 export default function MarketplaceCard({ product }: ProductCardProps) {
-
     const {
         id,
         name,
@@ -20,6 +19,7 @@ export default function MarketplaceCard({ product }: ProductCardProps) {
         is_active,
         image,
         category,
+        units_left
     } = product;
 
     const formatPrice = () => {
@@ -29,7 +29,6 @@ export default function MarketplaceCard({ product }: ProductCardProps) {
 
     return (
         <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-100">
-
             <div className="relative h-56">
                 <div className="absolute inset-0 bg-gray-100">
                     <Image
@@ -41,7 +40,6 @@ export default function MarketplaceCard({ product }: ProductCardProps) {
                     />
                 </div>
 
-                {/* Gradient overlay */}
                 <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent"></div>
 
                 {/* Location badge */}
@@ -66,22 +64,27 @@ export default function MarketplaceCard({ product }: ProductCardProps) {
                 {/* Status indicator */}
                 {!is_active && (
                     <div className="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-lg text-xs font-medium">
-                       {is_active}
+                        Inactive
                     </div>
                 )}
             </div>
 
             <div className="p-5">
-                {/* Title and Price section */}
-                <div className="mb-3">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1">{name}</h3>
-                    <div className="flex justify-between items-center mb-2">
+                {/* Title */}
+                <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1">{name}</h3>
+
+                {/* Price, WhatsApp, Units left */}
+                <div className="flex justify-between items-center mb-4">
+                    <div>
                         <p className="text-blue-700 font-bold text-xl">{formatPrice()}</p>
-                        <WhatsAppButton
-                            message={`Hello, I'm interested in the product: ${name} (ID: ${id})`}
-                            small
-                        />
+                        <div className="mt-1 text-xs text-gray-600 bg-gray-100 inline-block px-2 py-0.5 rounded-md">
+                            <span className="font-medium">Units left:</span> {units_left || 0}
+                        </div>
                     </div>
+                    <WhatsAppButton
+                        message={`Hello, I'm interested in the product: ${name} (ID: ${id})`}
+                        small
+                    />
                 </div>
 
                 {/* Seller info */}
@@ -94,7 +97,7 @@ export default function MarketplaceCard({ product }: ProductCardProps) {
                 {/* Description */}
                 <p className="text-sm text-gray-600 mb-4 line-clamp-2">{description}</p>
 
-                {/* View Details button */}
+                {/* View Details */}
                 <Link
                     href={`/marketplace/${id}`}
                     className="block w-full text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white py-2.5 px-4 rounded-lg font-medium transition-all hover:from-blue-700 hover:to-blue-800 hover:shadow-md"

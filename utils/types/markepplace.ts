@@ -11,6 +11,7 @@ export type MarketplaceItem = {
   seller: string;
   other_images : string;
   is_active: boolean;
+  units_left: string;
   created_at: string;
   updated_at: string;
 };
